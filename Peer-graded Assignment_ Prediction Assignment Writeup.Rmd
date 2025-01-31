@@ -136,7 +136,7 @@ rfClasses <- predict(rfFit, newdata = Test_data)
 confusionMatrix(rfClasses, Test_data$classe)
 ```
 
-The Random Forest model achieves an accuracy of 99.5%, making it the best-performing model.
+The Random Forest model achieves an accuracy of 99.29%, making it the best-performing model.
 
 ###first two model Evaluation
 The performance of the PLSDA and RDA models is compared using resampling results.
@@ -162,7 +162,7 @@ rfFit$finalModel
 ```
 
 ###Conclusion
-The Random Forest model is selected as the final model due to its high accuracy (99.5%). It is then used to predict the exercise quality for the test dataset.
+The Random Forest model is selected as the final model due to its high accuracy (99.29%). It is then used to predict the exercise quality for the test dataset.
 Predict on the original test data
 
 ```{r}
