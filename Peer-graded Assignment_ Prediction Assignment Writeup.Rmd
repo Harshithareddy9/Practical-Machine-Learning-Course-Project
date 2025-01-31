@@ -101,6 +101,13 @@ The final values used for the model were gamma = 0 and lambda = 0.75.
 #The model is evaluated using the ROC metric.
 Train PLSDA model
 ```{r}
+set.seed(12345)
+ctrl <- trainControl(method = "repeatedcv", repeats = 3, classProbs = TRUE, summaryFunction = defaultSummary)
+plsFit <- train(classe ~ ., data = Train_data, method = "pls", tuneLength = 15, trControl = ctrl, metric = "ROC", preProc = c("center","scale"))
+plsFit
+```
+The final value used for the model was ncomp = 15.
+```{r}
 plsClasses <- predict(plsFit, newdata = Test_data)
 str(plsClasses)
 ```
