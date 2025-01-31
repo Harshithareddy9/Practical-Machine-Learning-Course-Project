@@ -1,15 +1,3 @@
-library(plyr)
-library(dplyr)
-library(lattice)
-library(ggplot2)
-library(caret)
-library(rpart)
-library(rpart.plot)
-library(RColorBrewer)
-library(kernlab)
-library(randomForest)
-library(knitr)
-library(e1071)
 library(data.table)
 library(mlbench)
 library(caret)
@@ -18,7 +6,6 @@ library(randomForest)
 library(rattle)
 library(rpart)
 library(rpart.plot)
-library(data.table) 
 
 
 TrainingData <- fread("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", header=T, na.strings=c("NA","#DIV/0!",""))
@@ -84,3 +71,452 @@ xyplot(resamps, what = "BlandAltman")
 
 TestResult <- predict(rfFit, newdata=TestingData)
 TestResult
+
+
+
+
+
+
+-----------output--------
+
+
+> library(rpart.plot)
+> library(lattice)
+> library(caret)
+> library(randomForest)
+  randomForest 4.6-14
+  Type rfNews() to see new features/changes/bug fixes.
+  
+  Attaching package: ‘randomForest’
+  
+  The following object is masked from ‘package:ggplot2’:
+  
+      margin
+  
+  The following object is masked from ‘package:dplyr’:
+  
+      combine
+
+> library(rpart)
+> library(rpart.plot)
+> library(data.table) 
+data.table 1.12.8 using 16 threads (see ?getDTthreads).  Latest news: r-datatable.com
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+> TrainingData <- fread("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", header=T, na.strings=c("NA","#DIV/0!",""))
+ [100%] Downloaded 12202745 bytes...
+> TestingData <- fread("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv", header=T, na.strings=c("NA","#DIV/0!",""))
+ [100%] Downloaded 15113 bytes...
+> dim(TrainingData)
+[1] 19622   160
+> dim(TestingData)
+[1]  20 160
+> TrainingData <- fread("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", header=T, na.strings=c("NA","#DIV/0!",""))
+ [100%] Downloaded 12202745 bytes...
+> TestingData <- fread("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv", header=T, na.strings=c("NA","#DIV/0!",""))
+ [100%] Downloaded 15113 bytes...
+> dim(TrainingData)
+[1] 19622   160
+> dim(TestingData)
+[1]  20 160
+> names(TrainingData)
+  [1] "V1"                       "user_name"                "raw_timestamp_part_1"     "raw_timestamp_part_2"    
+  [5] "cvtd_timestamp"           "new_window"               "num_window"               "roll_belt"               
+  [9] "pitch_belt"               "yaw_belt"                 "total_accel_belt"         "kurtosis_roll_belt"      
+ [13] "kurtosis_picth_belt"      "kurtosis_yaw_belt"        "skewness_roll_belt"       "skewness_roll_belt.1"    
+ [17] "skewness_yaw_belt"        "max_roll_belt"            "max_picth_belt"           "max_yaw_belt"            
+ [21] "min_roll_belt"            "min_pitch_belt"           "min_yaw_belt"             "amplitude_roll_belt"     
+ [25] "amplitude_pitch_belt"     "amplitude_yaw_belt"       "var_total_accel_belt"     "avg_roll_belt"           
+ [29] "stddev_roll_belt"         "var_roll_belt"            "avg_pitch_belt"           "stddev_pitch_belt"       
+ [33] "var_pitch_belt"           "avg_yaw_belt"             "stddev_yaw_belt"          "var_yaw_belt"            
+ [37] "gyros_belt_x"             "gyros_belt_y"             "gyros_belt_z"             "accel_belt_x"            
+ [41] "accel_belt_y"             "accel_belt_z"             "magnet_belt_x"            "magnet_belt_y"           
+ [45] "magnet_belt_z"            "roll_arm"                 "pitch_arm"                "yaw_arm"                 
+ [49] "total_accel_arm"          "var_accel_arm"            "avg_roll_arm"             "stddev_roll_arm"         
+ [53] "var_roll_arm"             "avg_pitch_arm"            "stddev_pitch_arm"         "var_pitch_arm"           
+ [57] "avg_yaw_arm"              "stddev_yaw_arm"           "var_yaw_arm"              "gyros_arm_x"             
+ [61] "gyros_arm_y"              "gyros_arm_z"              "accel_arm_x"              "accel_arm_y"             
+ [65] "accel_arm_z"              "magnet_arm_x"             "magnet_arm_y"             "magnet_arm_z"            
+ [69] "kurtosis_roll_arm"        "kurtosis_picth_arm"       "kurtosis_yaw_arm"         "skewness_roll_arm"       
+ [73] "skewness_pitch_arm"       "skewness_yaw_arm"         "max_roll_arm"             "max_picth_arm"           
+ [77] "max_yaw_arm"              "min_roll_arm"             "min_pitch_arm"            "min_yaw_arm"             
+ [81] "amplitude_roll_arm"       "amplitude_pitch_arm"      "amplitude_yaw_arm"        "roll_dumbbell"           
+ [85] "pitch_dumbbell"           "yaw_dumbbell"             "kurtosis_roll_dumbbell"   "kurtosis_picth_dumbbell" 
+ [89] "kurtosis_yaw_dumbbell"    "skewness_roll_dumbbell"   "skewness_pitch_dumbbell"  "skewness_yaw_dumbbell"   
+ [93] "max_roll_dumbbell"        "max_picth_dumbbell"       "max_yaw_dumbbell"         "min_roll_dumbbell"       
+ [97] "min_pitch_dumbbell"       "min_yaw_dumbbell"         "amplitude_roll_dumbbell"  "amplitude_pitch_dumbbell"
+[101] "amplitude_yaw_dumbbell"   "total_accel_dumbbell"     "var_accel_dumbbell"       "avg_roll_dumbbell"       
+[105] "stddev_roll_dumbbell"     "var_roll_dumbbell"        "avg_pitch_dumbbell"       "stddev_pitch_dumbbell"   
+[109] "var_pitch_dumbbell"       "avg_yaw_dumbbell"         "stddev_yaw_dumbbell"      "var_yaw_dumbbell"        
+[113] "gyros_dumbbell_x"         "gyros_dumbbell_y"         "gyros_dumbbell_z"         "accel_dumbbell_x"        
+[117] "accel_dumbbell_y"         "accel_dumbbell_z"         "magnet_dumbbell_x"        "magnet_dumbbell_y"       
+[121] "magnet_dumbbell_z"        "roll_forearm"             "pitch_forearm"            "yaw_forearm"             
+[125] "kurtosis_roll_forearm"    "kurtosis_picth_forearm"   "kurtosis_yaw_forearm"     "skewness_roll_forearm"   
+[129] "skewness_pitch_forearm"   "skewness_yaw_forearm"     "max_roll_forearm"         "max_picth_forearm"       
+[133] "max_yaw_forearm"          "min_roll_forearm"         "min_pitch_forearm"        "min_yaw_forearm"         
+[137] "amplitude_roll_forearm"   "amplitude_pitch_forearm"  "amplitude_yaw_forearm"    "total_accel_forearm"     
+[141] "var_accel_forearm"        "avg_roll_forearm"         "stddev_roll_forearm"      "var_roll_forearm"        
+[145] "avg_pitch_forearm"        "stddev_pitch_forearm"     "var_pitch_forearm"        "avg_yaw_forearm"         
+[149] "stddev_yaw_forearm"       "var_yaw_forearm"          "gyros_forearm_x"          "gyros_forearm_y"         
+[153] "gyros_forearm_z"          "accel_forearm_x"          "accel_forearm_y"          "accel_forearm_z"         
+[157] "magnet_forearm_x"         "magnet_forearm_y"         "magnet_forearm_z"         "classe"                  
+> 
+> List_Na <- sapply(TrainingData, function (x) any(is.na(x)))
+> newTrainingData <- subset(TrainingData, select=c("classe", names(List_Na)[!List_Na & grepl("belt|[^(fore)]arm|dumbbell|forearm", names(List_Na))]))
+> newTrainingData <- newTrainingData[, classe := factor(newTrainingData[, classe])]
+> newTrainingData[, .N, classe]
+   classe    N
+1:      A 5580
+2:      B 3797
+3:      C 3422
+4:      D 3216
+5:      E 3607
+> inTrain <- createDataPartition(newTrainingData$classe, p=0.6, list=FALSE)
+> Train_data <- newTrainingData[inTrain, ]
+> Test_data <- newTrainingData[-inTrain, ]
+> nzv <- nearZeroVar(Train_data, saveMetrics=TRUE)
+> nzv
+                     freqRatio percentUnique zeroVar   nzv
+classe                1.469065    0.04245924   FALSE FALSE
+roll_belt             1.042910    8.59375000   FALSE FALSE
+pitch_belt            1.176471   13.77377717   FALSE FALSE
+yaw_belt              1.080000   14.48709239   FALSE FALSE
+total_accel_belt      1.106242    0.23777174   FALSE FALSE
+gyros_belt_x          1.076524    1.04449728   FALSE FALSE
+gyros_belt_y          1.186623    0.54347826   FALSE FALSE
+gyros_belt_z          1.034164    1.37567935   FALSE FALSE
+accel_belt_x          1.052854    1.32472826   FALSE FALSE
+accel_belt_y          1.094421    1.14639946   FALSE FALSE
+accel_belt_z          1.041825    2.42866848   FALSE FALSE
+magnet_belt_x         1.026667    2.47112772   FALSE FALSE
+magnet_belt_y         1.222520    2.41168478   FALSE FALSE
+magnet_belt_z         1.010563    3.63451087   FALSE FALSE
+roll_arm             48.976190   19.45482337   FALSE FALSE
+pitch_arm            73.500000   22.74116848   FALSE FALSE
+yaw_arm              30.701493   21.50135870   FALSE FALSE
+total_accel_arm       1.065913    0.56046196   FALSE FALSE
+gyros_arm_x           1.051613    5.25645380   FALSE FALSE
+gyros_arm_y           1.431818    3.05706522   FALSE FALSE
+gyros_arm_z           1.043988    1.97860054   FALSE FALSE
+accel_arm_x           1.161616    6.48777174   FALSE FALSE
+accel_arm_y           1.097744    4.39028533   FALSE FALSE
+accel_arm_z           1.011765    6.47927989   FALSE FALSE
+magnet_arm_x          1.038462   11.14130435   FALSE FALSE
+magnet_arm_y          1.037037    7.16711957   FALSE FALSE
+magnet_arm_z          1.062500   10.51290761   FALSE FALSE
+roll_dumbbell         1.038462   87.56793478   FALSE FALSE
+pitch_dumbbell        2.296296   85.36854620   FALSE FALSE
+yaw_dumbbell          1.094595   87.02445652   FALSE FALSE
+total_accel_dumbbell  1.065455    0.35665761   FALSE FALSE
+gyros_dumbbell_x      1.002817    1.97010870   FALSE FALSE
+gyros_dumbbell_y      1.305233    2.23335598   FALSE FALSE
+gyros_dumbbell_z      1.112392    1.58797554   FALSE FALSE
+accel_dumbbell_x      1.005236    3.36277174   FALSE FALSE
+accel_dumbbell_y      1.076389    3.85529891   FALSE FALSE
+accel_dumbbell_z      1.078571    3.35427989   FALSE FALSE
+magnet_dumbbell_x     1.105263    8.83152174   FALSE FALSE
+magnet_dumbbell_y     1.151786    6.94633152   FALSE FALSE
+magnet_dumbbell_z     1.093458    5.55366848   FALSE FALSE
+roll_forearm         10.758294   14.82676630   FALSE FALSE
+pitch_forearm        59.710526   21.01732337   FALSE FALSE
+yaw_forearm          14.733766   14.09646739   FALSE FALSE
+total_accel_forearm   1.156379    0.56895380   FALSE FALSE
+gyros_forearm_x       1.097403    2.34375000   FALSE FALSE
+gyros_forearm_y       1.054054    6.08016304   FALSE FALSE
+gyros_forearm_z       1.197183    2.41168478   FALSE FALSE
+accel_forearm_x       1.035088    6.57269022   FALSE FALSE
+accel_forearm_y       1.046154    8.19463315   FALSE FALSE
+accel_forearm_z       1.063830    4.70448370   FALSE FALSE
+magnet_forearm_x      1.018182   12.21127717   FALSE FALSE
+magnet_forearm_y      1.169811   15.17493207   FALSE FALSE
+magnet_forearm_z      1.076923   13.36616848   FALSE FALSE
+
+
+> set.seed(123)
+> rdaFit <- train(classe ~ ., data = Train_data, method = "rda", tuneGrid = data.frame(gamma = (0:4)/4, lambda = 3/4), trControl = ctrl, metric = "ROC")
+Warning message:
+In train.default(x, y, weights = w, ...) :
+  The metric "ROC" was not in the result set. Accuracy will be used instead.
+> rdaFit
+Regularized Discriminant Analysis 
+
+11776 samples
+   52 predictor
+    5 classes: 'A', 'B', 'C', 'D', 'E' 
+
+No pre-processing
+Resampling: Cross-Validated (10 fold, repeated 3 times) 
+Summary of sample sizes: 10599, 10597, 10599, 10597, 10598, 10600, ... 
+Resampling results across tuning parameters:
+
+  gamma  Accuracy   Kappa    
+  0.00   0.8346912  0.7913322
+  0.25   0.5938909  0.4882977
+  0.50   0.5279083  0.4042858
+  0.75   0.4810628  0.3444497
+  1.00   0.4027117  0.2407040
+
+Tuning parameter 'lambda' was held constant at a value of 0.75
+Accuracy was used to select the optimal model using the largest value.
+The final values used for the model were gamma = 0 and lambda = 0.75.
+> rdaClasses <- predict(rdaFit, newdata = Test_data)
+> confusionMatrix(rdaClasses, Test_data$classe)
+Confusion Matrix and Statistics
+
+          Reference
+Prediction    A    B    C    D    E
+         A 1962  165   24    2   12
+         B   28 1108   95    7   86
+         C  144  200 1216  207   95
+         D   94   37   27 1052   92
+         E    4    8    6   18 1157
+
+Overall Statistics
+                                          
+               Accuracy : 0.8278          
+                 95% CI : (0.8193, 0.8361)
+    No Information Rate : 0.2845          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.7827          
+                                          
+ Mcnemar's Test P-Value : < 2.2e-16       
+
+Statistics by Class:
+
+                     Class: A Class: B Class: C Class: D Class: E
+Sensitivity            0.8790   0.7299   0.8889   0.8180   0.8024
+Specificity            0.9638   0.9659   0.9003   0.9619   0.9944
+Pos Pred Value         0.9062   0.8369   0.6531   0.8080   0.9698
+Neg Pred Value         0.9525   0.9371   0.9746   0.9642   0.9572
+Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+Detection Rate         0.2501   0.1412   0.1550   0.1341   0.1475
+Detection Prevalence   0.2759   0.1687   0.2373   0.1659   0.1521
+Balanced Accuracy      0.9214   0.8479   0.8946   0.8900   0.8984
+> set.seed(12345)
+> ctrl <- trainControl(method = "repeatedcv", repeats = 3, classProbs = TRUE, summaryFunction = defaultSummary)
+> plsFit <- train(classe ~ ., data = Train_data, method = "pls", tuneLength = 15, trControl = ctrl, metric = "ROC", preProc = c("center","scale"))
+There were 50 or more warnings (use warnings() to see the first 50)
+> plsFit
+Partial Least Squares 
+
+11776 samples
+   52 predictor
+    5 classes: 'A', 'B', 'C', 'D', 'E' 
+
+Pre-processing: centered (52), scaled (52) 
+Resampling: Cross-Validated (10 fold, repeated 3 times) 
+Summary of sample sizes: 10598, 10600, 10598, 10600, 10598, 10598, ... 
+Resampling results across tuning parameters:
+
+  ncomp  Accuracy   Kappa    
+   1     0.3282096  0.1104404
+   2     0.3368729  0.1272438
+   3     0.3738690  0.1860394
+   4     0.4555040  0.2963945
+   5     0.4923863  0.3466674
+   6     0.5028596  0.3608248
+   7     0.5219945  0.3846729
+   8     0.5443026  0.4156081
+   9     0.5569553  0.4328600
+  10     0.5787807  0.4616702
+  11     0.5898742  0.4766546
+  12     0.6047924  0.4954100
+  13     0.6099722  0.5020132
+  14     0.6133685  0.5060687
+  15     0.6230207  0.5184016
+
+Accuracy was used to select the optimal model using the largest value.
+The final value used for the model was ncomp = 15.
+> plsClasses <- predict(plsFit, newdata = Test_data)
+> str(plsClasses)
+ Factor w/ 5 levels "A","B","C","D",..: 1 1 1 1 1 1 1 1 1 1 ...
+> plsProbs <- predict(plsFit, newdata = Test_data, type = "prob")
+> head(plsProbs)
+          A         B         C         D         E
+1 0.4196316 0.1257430 0.1548275 0.1393994 0.1603984
+2 0.4248591 0.1263486 0.1546975 0.1390133 0.1550815
+3 0.4088416 0.1257802 0.1552124 0.1402491 0.1699167
+4 0.4104179 0.1254796 0.1561112 0.1415534 0.1664380
+5 0.4261410 0.1255289 0.1528450 0.1380332 0.1574518
+6 0.4185260 0.1268675 0.1550986 0.1390048 0.1605030
+> trellis.par.set(caretTheme())
+Warning message:
+In trellis.par.set(caretTheme()) :
+  Note: The default device has been opened to honour attempt to modify trellis settings
+> plot(plsFit, metric = "Kappa")
+> confusionMatrix(plsClasses, Test_data$classe)
+Confusion Matrix and Statistics
+
+          Reference
+Prediction    A    B    C    D    E
+         A 1901  420  352  162  126
+         B   26  639   74   68  226
+         C  113  249  716  115  141
+         D  185   86  161  828  191
+         E    7  124   65  113  758
+
+Overall Statistics
+                                          
+               Accuracy : 0.6171          
+                 95% CI : (0.6063, 0.6279)
+    No Information Rate : 0.2845          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.5105          
+                                          
+ Mcnemar's Test P-Value : < 2.2e-16       
+
+Statistics by Class:
+
+                     Class: A Class: B Class: C Class: D Class: E
+Sensitivity            0.8517  0.42095  0.52339   0.6439  0.52566
+Specificity            0.8112  0.93774  0.90460   0.9050  0.95175
+Pos Pred Value         0.6420  0.61859  0.53673   0.5706  0.71040
+Neg Pred Value         0.9322  0.87098  0.89988   0.9284  0.89910
+Prevalence             0.2845  0.19347  0.17436   0.1639  0.18379
+Detection Rate         0.2423  0.08144  0.09126   0.1055  0.09661
+Detection Prevalence   0.3774  0.13166  0.17002   0.1849  0.13599
+Balanced Accuracy      0.8314  0.67934  0.71400   0.7744  0.73870
+> rfFit <- train(classe~., data=Train_data, method="rf", tuneGrid=expand.grid(.mtry=sqrt(ncol(Train_data[,2:53]))), trControl=ctrl)
+> rfFit
+Random Forest 
+
+11776 samples
+   52 predictor
+    5 classes: 'A', 'B', 'C', 'D', 'E' 
+
+No pre-processing
+Resampling: Cross-Validated (10 fold, repeated 3 times) 
+Summary of sample sizes: 10598, 10597, 10597, 10599, 10599, 10600, ... 
+Resampling results:
+
+  Accuracy   Kappa    
+  0.9926967  0.9907616
+
+Tuning parameter 'mtry' was held constant at a value of 7.211103
+> rfClasses <- predict(rfFit, newdata = Test_data)
+> confusionMatrix(rfClasses, Test_data$classe)
+Confusion Matrix and Statistics
+
+          Reference
+Prediction    A    B    C    D    E
+         A 2231   13    0    0    0
+         B    0 1500   14    0    0
+         C    0    5 1351   12    1
+         D    0    0    3 1273    6
+         E    1    0    0    1 1435
+
+Overall Statistics
+                                          
+               Accuracy : 0.9929          
+                 95% CI : (0.9907, 0.9946)
+    No Information Rate : 0.2845          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.991           
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: A Class: B Class: C Class: D Class: E
+Sensitivity            0.9996   0.9881   0.9876   0.9899   0.9951
+Specificity            0.9977   0.9978   0.9972   0.9986   0.9997
+Pos Pred Value         0.9942   0.9908   0.9869   0.9930   0.9986
+Neg Pred Value         0.9998   0.9972   0.9974   0.9980   0.9989
+Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+Detection Rate         0.2843   0.1912   0.1722   0.1622   0.1829
+Detection Prevalence   0.2860   0.1930   0.1745   0.1634   0.1832
+Balanced Accuracy      0.9986   0.9930   0.9924   0.9943   0.9974
+> varImp(rfFit)
+rf variable importance
+
+  only 20 most important variables shown (out of 52)
+
+                     Overall
+roll_belt             100.00
+yaw_belt               72.66
+pitch_forearm          67.30
+magnet_dumbbell_z      60.21
+pitch_belt             57.64
+magnet_dumbbell_y      52.73
+roll_forearm           48.63
+magnet_dumbbell_x      37.82
+roll_dumbbell          32.92
+magnet_belt_z          32.17
+accel_belt_z           32.04
+magnet_belt_y          30.46
+accel_dumbbell_y       29.24
+accel_forearm_x        23.91
+accel_dumbbell_z       23.54
+roll_arm               20.50
+magnet_forearm_z       20.28
+gyros_belt_z           19.53
+total_accel_dumbbell   18.49
+accel_dumbbell_x       17.65
+> rfFit$finalModel
+
+Call:
+ randomForest(x = x, y = y, mtry = min(param$mtry, ncol(x))) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 7
+
+        OOB estimate of  error rate: 0.61%
+Confusion matrix:
+     A    B    C    D    E class.error
+A 3342    5    0    0    1 0.001792115
+B   12 2260    7    0    0 0.008336990
+C    0   10 2039    5    0 0.007302824
+D    0    0   22 1907    1 0.011917098
+E    0    0    3    6 2156 0.004157044
+> resamps <- resamples(list(pls = plsFit, rda = rdaFit))
+> summary(resamps)
+
+Call:
+summary.resamples(object = resamps)
+
+Models: pls, rda 
+Number of resamples: 30 
+
+Accuracy 
+         Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's
+pls 0.5938828 0.6163814 0.6232498 0.6230207 0.6314223 0.6511036    0
+rda 0.8130841 0.8278128 0.8366569 0.8346912 0.8394223 0.8486395    0
+
+Kappa 
+         Min.   1st Qu.    Median      Mean   3rd Qu.     Max. NA's
+pls 0.4809678 0.5096085 0.5189918 0.5184016 0.5296748 0.554255    0
+rda 0.7643339 0.7826553 0.7937315 0.7913322 0.7972831 0.809028    0
+
+> diffs <- diff(resamps)
+> summary(diffs)
+
+Call:
+summary.diff.resamples(object = diffs)
+
+p-value adjustment: bonferroni 
+Upper diagonal: estimates of the difference
+Lower diagonal: p-value for H0: difference = 0
+
+Accuracy 
+    pls       rda    
+pls           -0.2117
+rda < 2.2e-16        
+
+Kappa 
+    pls       rda    
+pls           -0.2729
+rda < 2.2e-16        
+
+> xyplot(resamps, what = "BlandAltman")
+> TestResult <- predict(rfFit, newdata=TestingData)
+> TestResult
+ [1] B A B A A E D B A A B C B A E E A B B B
+Levels: A B C D E
